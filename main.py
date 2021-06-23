@@ -52,7 +52,7 @@ if __name__ == '__main__':
     port = environ.get('PORT')
 
     scheduler = BackgroundScheduler()
-    job = scheduler.add_job(free_gpu, 'interval', seconds=5)
+    job = scheduler.add_job(free_gpu, 'interval', minutes=1)
     scheduler.start()
 
     app.run(debug=True, host='0.0.0.0', port=port)

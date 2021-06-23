@@ -62,7 +62,7 @@ def get_ents(paragraphs):
 
     if extractor is None:
         extractor = RxnExtractor(model_dir=model_dir)
-        extractor_time = time()
+    extractor_time = time()
 
     toks, labs = get_bio(paragraphs, extractor)
 
