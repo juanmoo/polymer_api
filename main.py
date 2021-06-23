@@ -55,4 +55,4 @@ if __name__ == '__main__':
     job = scheduler.add_job(free_gpu, 'interval', minutes=1)
     scheduler.start()
 
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=False, host='0.0.0.0', port=port)

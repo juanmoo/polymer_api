@@ -24,7 +24,11 @@ def free_gpu():
     global extractor
     global extractor_time
 
-    if (extractor_time is not None) and (time() - extractor_time >= 10 * 60):
+    config_path = os.path.join(os.path.realpath('.'), '.env')
+    load_dotenv(dotenv_path=config_path)
+    free_interval = environ.get('GPU_FREE_INTERVAL')
+
+    if (extractor_time is not None) and (time() - extractor_time >= free_interval * 60):
         extractor = None
         extractor_time = None
 
