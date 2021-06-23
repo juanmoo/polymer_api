@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
@@ -7,7 +9,8 @@ from pathlib import Path
 from random import shuffle
 import json
 import os
-from extract import get_ents
+from extract import get_ents, free_gpu
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # App Setup
 app = Flask(__name__)
@@ -36,6 +39,8 @@ class Extractor(Resource):
 api.add_resource(Extractor, '/extract')
 
 
+
+
 if __name__ == '__main__':
 
     print('Starting up server ...')
@@ -45,5 +50,9 @@ if __name__ == '__main__':
 
     load_dotenv(dotenv_path=config_path)
     port = environ.get('PORT')
+
+    scheduler = BackgroundScheduler()
+    job = scheduler.add_job(free_gpu, 'interval', seconds=5)
+    scheduler.start()
 
     app.run(debug=True, host='0.0.0.0', port=port)

@@ -11,10 +11,26 @@ from medtrialextractor import RxnExtractor
 import warnings
 from seqeval.metrics.sequence_labeling import get_entities
 warnings.filterwarnings("ignore")
+from time import time
+import torch
 
 nlp = English()
-
 tokenizer = nlp.tokenizer
+extractor = None
+extractor_time = None
+
+
+def free_gpu():
+    global extractor
+    global extractor_time
+
+    print('entered!')
+    if (extractor_time is not None) and (time() - extractor_time >= 10 * 60):
+        extractor = None
+        extractor_time = None
+
+        print('Clearing memory!')
+        torch.cuda.empty_cache()
 
 
 def tokenize(text):
@@ -37,12 +53,18 @@ def get_bio(paragraphs, extractor):
 
 def get_ents(paragraphs):
 
+    global extractor
+    global extractor_time
+
     # get extractor
     config_path = os.path.join(os.path.realpath('.'), '.env')
     load_dotenv(dotenv_path=config_path)
     models_dir = environ.get('MODELS_DIR')
     model_dir = os.path.join(models_dir, 'model_v1')
-    extractor = RxnExtractor(model_dir=model_dir)
+
+    if extractor is None:
+        extractor = RxnExtractor(model_dir=model_dir)
+        extractor_time = time()
 
     toks, labs = get_bio(paragraphs, extractor)
 
