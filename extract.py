@@ -24,12 +24,10 @@ def free_gpu():
     global extractor
     global extractor_time
 
-    print('entered!')
     if (extractor_time is not None) and (time() - extractor_time >= 10 * 60):
         extractor = None
         extractor_time = None
 
-        print('Clearing memory!')
         torch.cuda.empty_cache()
 
 
